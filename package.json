@@ -1,25 +1,25 @@
 {
   "name": "pht-ai-v100",
   "version": "100.0.0",
-  "description": "Official PHT AI Platform V100.0",
-  "type": "module",
+  "description": "PHT AI V100.0 by Hoàng Tấn Phát",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
   },
   "keywords": [
-    "PHT",
     "AI",
     "ChatGPT",
-    "OpenAI"
+    "PHT AI",
+    "Website"
   ],
   "author": "Hoàng Tấn Phát",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2",
-    "openai": "^5.10.2"
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "openai": "^5.12.2"
   }
 }
