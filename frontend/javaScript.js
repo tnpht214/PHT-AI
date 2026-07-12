@@ -3,441 +3,361 @@
    JavaScript - Part 1
 ========================================= */
 
-// ==============================
-// CHUYỂN TAB
-// ==============================
+//=============================
+// BIẾN TOÀN CỤC
+//=============================
 
-function showTab(tabId){
+let currentPage = "home";
 
-    document.querySelectorAll(".tab").forEach(tab=>{
+let chatHistory = [];
 
-        tab.classList.remove("active");
+let chatSessions = [];
 
-    });
+let currentChatIndex = 0;
 
-    const target=document.getElementById(tabId);
+let profile = {
 
-    if(target){
+    name: "",
 
-        target.classList.add("active");
+    email: "",
 
-    }
+    bio: "",
 
-}
-
-// ==============================
-// HỒ SƠ NGƯỜI DÙNG
-// ==============================
-
-let profile=JSON.parse(
-localStorage.getItem("profile")
-)||{
-
-    name:"Người dùng",
-
-    email:"",
-
-    bio:"",
-
-    avatar:"https://cdn-icons-png.flaticon.com/512/149/149071.png"
+    avatar: ""
 
 };
 
-// ==============================
-// HIỂN THỊ HỒ SƠ
-// ==============================
+//=============================
+// LOAD WEBSITE
+//=============================
 
-function loadProfile(){
-
-    const nameInput=document.getElementById("profileNameInput");
-    const emailInput=document.getElementById("profileEmail");
-    const bioInput=document.getElementById("profileBio");
-
-    if(nameInput) nameInput.value=profile.name;
-    if(emailInput) emailInput.value=profile.email;
-    if(bioInput) bioInput.value=profile.bio;
-
-    const avatar=document.getElementById("avatarPreview");
-
-    if(avatar){
-
-        avatar.src=profile.avatar;
-
-    }
-
-    const sideAvatar=document.getElementById("profileAvatar");
-
-    if(sideAvatar){
-
-        sideAvatar.src=profile.avatar;
-
-    }
-
-    const sideName=document.getElementById("profileName");
-
-    if(sideName){
-
-        sideName.textContent=profile.name;
-
-    }
-
-    const showName=document.getElementById("showName");
-
-    if(showName){
-
-        showName.textContent=profile.name;
-
-    }
-
-    const showEmail=document.getElementById("showEmail");
-
-    if(showEmail){
-
-        showEmail.textContent=profile.email;
-
-    }
-
-}
-
-// ==============================
-// LƯU HỒ SƠ
-// ==============================
-
-function saveProfile(){
-
-    profile.name=document.getElementById("profileNameInput").value;
-
-    profile.email=document.getElementById("profileEmail").value;
-
-    profile.bio=document.getElementById("profileBio").value;
-
-    localStorage.setItem(
-
-        "profile",
-
-        JSON.stringify(profile)
-
-    );
+window.onload = () => {
 
     loadProfile();
 
-    alert("Đã lưu hồ sơ thành công ✅");
+    loadChats();
+
+    updateVisitor();
+
+    initTheme();
+
+    showPage("home");
+
+};
+
+//=============================
+// CHUYỂN TRANG
+//=============================
+
+function showPage(id){
+
+    document.querySelectorAll(".page").forEach(page=>{
+
+        page.classList.remove("active");
+
+    });
+
+    const page=document.getElementById(id);
+
+    if(page){
+
+        page.classList.add("active");
+
+        currentPage=id;
+
+    }
 
 }
-// =========================================
-// ĐỔI ẢNH ĐẠI DIỆN
-// =========================================
 
-function changeAvatar(event){
-
-    const file=event.target.files[0];
-
-    if(!file) return;
-
-    const reader=new FileReader();
-
-    reader.onload=function(e){
-
-        profile.avatar=e.target.result;
-
-        localStorage.setItem(
-
-            "profile",
-
-            JSON.stringify(profile)
-
-        );
-
-        loadProfile();
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-// =========================================
-// DARK / LIGHT MODE
-// =========================================
-
-let theme=localStorage.getItem("theme") || "dark";
-
-if(theme==="light"){
-
-    document.body.classList.add("light-mode");
-
-}
+//=============================
+// DARK MODE
+//=============================
 
 function toggleTheme(){
 
-    document.body.classList.toggle("light-mode");
-
-    if(document.body.classList.contains("light-mode")){
-
-        localStorage.setItem("theme","light");
-
-    }else{
-
-        localStorage.setItem("theme","dark");
-
-    }
-
-}
-
-// =========================================
-// BACK TO TOP
-// =========================================
-
-const backButton=document.getElementById("backToTop");
-
-window.addEventListener("scroll",()=>{
-
-    if(window.scrollY>300){
-
-        if(backButton){
-
-            backButton.style.display="block";
-
-        }
-
-    }else{
-
-        if(backButton){
-
-            backButton.style.display="none";
-
-        }
-
-    }
-
-});
-
-function scrollToTop(){
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-}
-
-// =========================================
-// LOADING SCREEN
-// =========================================
-
-window.addEventListener("load",()=>{
-
-    const loading=document.getElementById("loadingScreen");
-
-    if(loading){
-
-        setTimeout(()=>{
-
-            loading.style.display="none";
-
-        },800);
-
-    }
-
-    loadProfile();
-
-});
-// =========================================
-// CHATBOT
-// PHẦN 3
-// =========================================
-
-// Danh sách cuộc trò chuyện
-
-let chats = JSON.parse(
-localStorage.getItem("chats")
-) || [];
-
-// Chat hiện tại
-
-let currentChat = -1;
-
-// =========================================
-// TẠO CHAT MỚI
-// =========================================
-
-function newChat(){
-
-    const welcome =
-    "👋 Xin chào " +
-    profile.name +
-    "! Mình là PHT AI. Hôm nay mình có thể giúp gì cho bạn?";
-
-    const chat = {
-
-        id:Date.now(),
-
-        name:"Chat " + (chats.length+1),
-
-        messages:[
-
-            {
-                role:"assistant",
-                content:welcome
-            }
-
-        ]
-
-    };
-
-    chats.push(chat);
-
-    currentChat = chats.length-1;
-
-    saveChats();
-
-    updateChatList();
-
-    renderMessages();
-
-}
-
-// =========================================
-// LƯU CHAT
-// =========================================
-
-function saveChats(){
+    document.body.classList.toggle("dark");
 
     localStorage.setItem(
 
-        "chats",
+        "theme",
 
-        JSON.stringify(chats)
+        document.body.classList.contains("dark")
+
+        ?"dark"
+
+        :"light"
 
     );
 
 }
 
-// =========================================
-// DANH SÁCH CHAT
-// =========================================
+function initTheme(){
 
-function updateChatList(){
+    const theme=
 
-    const list =
-    document.getElementById("chatList");
+    localStorage.getItem("theme");
 
-    if(!list) return;
+    if(theme==="dark"){
 
-    list.innerHTML="";
-
-    chats.forEach((chat,index)=>{
-
-        const option =
-        document.createElement("option");
-
-        option.value=index;
-
-        option.textContent=chat.name;
-
-        list.appendChild(option);
-
-    });
-
-    if(currentChat>=0){
-
-        list.value=currentChat;
+        document.body.classList.add("dark");
 
     }
 
 }
 
-// =========================================
-// CHỌN CHAT
-// =========================================
+//=============================
+// THÔNG BÁO
+//=============================
 
-function loadChat(){
+function toast(text){
 
-    const list =
-    document.getElementById("chatList");
+    const t=document.getElementById("toast");
 
-    currentChat =
-    Number(list.value);
+    t.innerText=text;
 
-    renderMessages();
+    t.classList.add("show");
+
+    setTimeout(()=>{
+
+        t.classList.remove("show");
+
+    },2500);
+
+}
+
+//=============================
+// POPUP
+//=============================
+
+function showPopup(text){
+
+    document.getElementById(
+
+        "popupText"
+
+    ).innerHTML=text;
+
+    document.getElementById(
+
+        "popup"
+
+    ).style.display="flex";
 
 }
 
-// =========================================
-// HIỂN THỊ CHAT
-// =========================================
+function closePopup(){
 
-function renderMessages(){
+    document.getElementById(
 
-    const box =
-    document.getElementById("chatBox");
+        "popup"
 
-    if(!box) return;
-
-    box.innerHTML="";
-
-    if(currentChat<0) return;
-
-    chats[currentChat].messages.forEach(msg=>{
-
-        const div =
-        document.createElement("div");
-
-        div.className =
-        msg.role==="user"
-        ? "user-message"
-        : "bot-message";
-
-        div.innerHTML =
-        msg.content;
-
-        box.appendChild(div);
-
-    });
-
-    box.scrollTop =
-    box.scrollHeight;
+    ).style.display="none";
 
 }
-// =========================================
+/* =========================================
+   PHT AI V100.0
+   JavaScript - Part 2
+========================================= */
+
+//=============================
+// HỒ SƠ NGƯỜI DÙNG
+//=============================
+
+function saveProfile() {
+
+    profile.name = document.getElementById("profileName").value.trim();
+
+    profile.email = document.getElementById("profileEmail").value.trim();
+
+    profile.bio = document.getElementById("profileBio").value.trim();
+
+    localStorage.setItem(
+        "pht_profile",
+        JSON.stringify(profile)
+    );
+
+    toast("✅ Đã lưu hồ sơ.");
+
+}
+
+function loadProfile() {
+
+    const data = localStorage.getItem("pht_profile");
+
+    if (!data) return;
+
+    profile = JSON.parse(data);
+
+    document.getElementById("profileName").value =
+        profile.name || "";
+
+    document.getElementById("profileEmail").value =
+        profile.email || "";
+
+    document.getElementById("profileBio").value =
+        profile.bio || "";
+
+    if (profile.avatar) {
+
+        document.getElementById(
+            "avatarPreview"
+        ).src = profile.avatar;
+
+    }
+
+}
+
+//=============================
+// ĐỔI AVATAR
+//=============================
+
+const avatarInput = document.getElementById("avatarInput");
+
+if (avatarInput) {
+
+    avatarInput.addEventListener(
+
+        "change",
+
+        function (event) {
+
+            const file = event.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                profile.avatar = e.target.result;
+
+                document.getElementById(
+                    "avatarPreview"
+                ).src = profile.avatar;
+
+                localStorage.setItem(
+                    "pht_profile",
+                    JSON.stringify(profile)
+                );
+
+                toast("🖼 Avatar đã được cập nhật.");
+
+            };
+
+            reader.readAsDataURL(file);
+
+        }
+
+    );
+
+}
+
+//=============================
+// AI CHÀO THEO TÊN
+//=============================
+
+function getUserName() {
+
+    if (
+
+        profile.name &&
+        profile.name.trim() !== ""
+
+    ) {
+
+        return profile.name;
+
+    }
+
+    return "bạn";
+
+}
+
+function welcomeMessage() {
+
+    const box = document.getElementById("chatBox");
+
+    if (!box) return;
+
+    box.innerHTML = "";
+
+    addBotMessage(
+
+        "👋 Xin chào <b>" +
+
+        getUserName() +
+
+        "</b>!<br><br>" +
+
+        "Mình là <b>PHT AI V100.0</b>.<br>" +
+
+        "Hôm nay mình có thể giúp gì cho bạn?"
+
+    );
+
+}
+/* =========================================
+   PHT AI V100.0
+   JavaScript - Part 3
+========================================= */
+
+//=============================
+// THÊM TIN NHẮN
+//=============================
+
+function addUserMessage(text){
+
+    const chatBox=document.getElementById("chatBox");
+
+    const div=document.createElement("div");
+
+    div.className="user-message";
+
+    div.innerHTML=text;
+
+    chatBox.appendChild(div);
+
+    chatBox.scrollTop=chatBox.scrollHeight;
+
+}
+
+function addBotMessage(text){
+
+    const chatBox=document.getElementById("chatBox");
+
+    const div=document.createElement("div");
+
+    div.className="bot-message";
+
+    div.innerHTML=text;
+
+    chatBox.appendChild(div);
+
+    chatBox.scrollTop=chatBox.scrollHeight;
+
+}
+
+//=============================
 // GỬI TIN NHẮN
-// PHẦN 4
-// =========================================
+//=============================
 
 async function sendMessage(){
 
     const input=document.getElementById("userInput");
 
-    if(!input) return;
+    const message=input.value.trim();
 
-    const text=input.value.trim();
+    if(message==="") return;
 
-    if(text==="") return;
-
-    // Nếu chưa có chat thì tạo mới
-    if(currentChat===-1){
-
-        newChat();
-
-    }
-
-    // Thêm tin nhắn người dùng
-    chats[currentChat].messages.push({
-
-        role:"user",
-
-        content:text
-
-    });
-
-    renderMessages();
+    addUserMessage(message);
 
     input.value="";
 
-    saveChats();
+    addBotMessage("⏳ AI đang suy nghĩ...");
+
+    const loading=document.querySelectorAll(".bot-message");
+
+    const last=loading[loading.length-1];
 
     try{
 
@@ -451,699 +371,322 @@ async function sendMessage(){
 
             body:JSON.stringify({
 
-                message:text,
+                message:message,
 
-                profile:profile,
-
-                history:chats[currentChat].messages
+                username:getUserName()
 
             })
 
         });
 
-        if(!response.ok){
-
-            throw new Error("Không kết nối được AI");
-
-        }
-
         const data=await response.json();
 
-        chats[currentChat].messages.push({
+        last.innerHTML=data.reply;
 
-            role:"assistant",
-
-            content:data.reply
-
-        });
-
-    }catch(error){
-
-        chats[currentChat].messages.push({
-
-            role:"assistant",
-
-            content:"❌ Không thể kết nối AI. Vui lòng thử lại sau."
-
-        });
+        saveChat(message,data.reply);
 
     }
 
-    saveChats();
+    catch(error){
 
-    renderMessages();
+        last.innerHTML="❌ Không thể kết nối tới AI.";
+
+        console.error(error);
+
+    }
 
 }
 
-// =========================================
+//=============================
 // ENTER ĐỂ GỬI
-// =========================================
-
-document.addEventListener("keydown",function(e){
-
-    const input=document.getElementById("userInput");
-
-    if(!input) return;
-
-    if(document.activeElement===input && e.key==="Enter"){
-
-        e.preventDefault();
-
-        sendMessage();
-
-    }
-
-});
-
-// =========================================
-// KHỞI TẠO
-// =========================================
+//=============================
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-    loadProfile();
+    const input=document.getElementById("userInput");
 
-    if(chats.length===0){
+    if(input){
 
-        newChat();
+        input.addEventListener("keydown",(e)=>{
 
-    }else{
+            if(e.key==="Enter"){
 
-        currentChat=0;
+                sendMessage();
 
-        updateChatList();
+            }
 
-        renderMessages();
+        });
 
     }
 
 });
-// =========================================
-// JAVASCRIPT PART 5
-// TÌM KIẾM - TYPING - COPY - VISITOR
-// =========================================
 
-// ==========================
-// TÌM KIẾM TRÊN WEBSITE
-// ==========================
+//=============================
+// NEW CHAT
+//=============================
 
-const searchInput=document.getElementById("searchInput");
+function newChat(){
 
-if(searchInput){
+    chatHistory=[];
 
-    searchInput.addEventListener("input",function(){
+    document.getElementById("chatBox").innerHTML="";
 
-        const keyword=this.value.toLowerCase();
+    welcomeMessage();
 
-        document.querySelectorAll("section").forEach(section=>{
+    toast("🆕 Đã tạo cuộc trò chuyện mới.");
 
-            const text=section.innerText.toLowerCase();
+}
 
-            if(
-                text.includes(keyword) ||
-                keyword===""
-            ){
+//=============================
+// LƯU CHAT
+//=============================
 
-                section.style.display="block";
+function saveChat(user,ai){
 
-            }else{
+    chatHistory.push({
 
-                section.style.display="none";
+        user:user,
 
-            }
+        ai:ai,
 
-        });
+        time:new Date().toLocaleString()
+
+    });
+
+    localStorage.setItem(
+
+        "pht_chat",
+
+        JSON.stringify(chatHistory)
+
+    );
+
+}
+
+//=============================
+// LOAD CHAT
+//=============================
+
+function loadChats(){
+
+    const data=localStorage.getItem("pht_chat");
+
+    if(!data) return;
+
+    chatHistory=JSON.parse(data);
+
+}
+/* =========================================
+   PHT AI V100.0
+   JavaScript - Part 4
+========================================= */
+
+//=============================
+// TÌM KIẾM WEBSITE
+//=============================
+
+function searchWebsite() {
+
+    const keyword = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    document.querySelectorAll(".page").forEach(page => {
+
+        const text = page.innerText.toLowerCase();
+
+        if (keyword === "") {
+
+            page.style.display = "";
+
+        } else {
+
+            page.style.display =
+                text.includes(keyword)
+                    ? ""
+                    : "none";
+
+        }
 
     });
 
 }
 
-// ==========================
-// AI ĐANG NHẬP...
-// ==========================
+//=============================
+// LƯỢT TRUY CẬP (LOCAL)
+//=============================
 
-function showTyping(){
+function updateVisitor() {
 
-    const box=document.getElementById("chatBox");
+    let count = Number(
+        localStorage.getItem("visitorCount") || 0
+    );
 
-    const typing=document.createElement("div");
+    count++;
 
-    typing.className="bot-message";
+    localStorage.setItem(
+        "visitorCount",
+        count
+    );
 
-    typing.id="typing";
+    const visitor = document.getElementById("visitorCount");
 
-    typing.innerHTML="🤖 Đang suy nghĩ...";
+    if (visitor) {
 
-    box.appendChild(typing);
-
-    box.scrollTop=box.scrollHeight;
-
-}
-
-function hideTyping(){
-
-    const typing=document.getElementById("typing");
-
-    if(typing){
-
-        typing.remove();
+        visitor.innerHTML = count;
 
     }
 
 }
 
-// ==========================
-// COPY TIN NHẮN AI
-// ==========================
+//=============================
+// XUẤT CHAT
+//=============================
 
-function copyText(text){
+function exportChat() {
 
-    navigator.clipboard.writeText(text);
+    if (chatHistory.length === 0) {
 
-    alert("📋 Đã sao chép.");
-
-}
-
-// ==========================
-// ĐẾM LƯỢT TRUY CẬP
-// (Local Demo)
-// ==========================
-
-let visitor=
-
-Number(
-localStorage.getItem("visitor")
-)||0;
-
-visitor++;
-
-localStorage.setItem(
-"visitor",
-visitor
-);
-
-const visitorText=
-document.getElementById("visitorCount");
-
-if(visitorText){
-
-    visitorText.innerText=visitor;
-
-}
-
-// ==========================
-// AI CHÀO NGƯỜI DÙNG
-// ==========================
-
-function getGreeting(){
-
-    const hour=new Date().getHours();
-
-    if(hour<12){
-
-        return "☀️ Chào buổi sáng";
-
-    }
-
-    if(hour<18){
-
-        return "🌤️ Chào buổi chiều";
-
-    }
-
-    return "🌙 Chào buổi tối";
-
-}
-
-console.log(
-
-getGreeting()+
-" "+
-profile.name
-
-);
-// =========================================
-// JAVASCRIPT PART 6
-// AI CHAT - STREAM - MARKDOWN
-// =========================================
-
-// ==========================
-// THÊM TIN NHẮN
-// ==========================
-
-function addMessage(role,text){
-
-    if(currentChat<0) return;
-
-    chats[currentChat].messages.push({
-
-        role:role,
-
-        content:text
-
-    });
-
-    saveChats();
-
-    renderMessages();
-
-}
-
-// ==========================
-// GỌI AI
-// ==========================
-
-async function askAI(message){
-
-    showTyping();
-
-    try{
-
-        const response=await fetch("/api/chat",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                message:message,
-
-                profile:profile,
-
-                history:chats[currentChat].messages
-
-            })
-
-        });
-
-        hideTyping();
-
-        if(!response.ok){
-
-            throw new Error();
-
-        }
-
-        const data=await response.json();
-
-        addMessage(
-
-            "assistant",
-
-            data.reply
-
-        );
-
-    }
-
-    catch(e){
-
-        hideTyping();
-
-        addMessage(
-
-            "assistant",
-
-            "❌ Không thể kết nối AI."
-
-        );
-
-    }
-
-}
-
-// ==========================
-// GỬI TIN NHẮN
-// ==========================
-
-async function sendMessage(){
-
-    const input=document.getElementById("userInput");
-
-    if(!input) return;
-
-    const text=input.value.trim();
-
-    if(text==="") return;
-
-    input.value="";
-
-    addMessage(
-
-        "user",
-
-        text
-
-    );
-
-    await askAI(text);
-
-}
-
-// ==========================
-// ENTER
-// ==========================
-
-const input=document.getElementById("userInput");
-
-if(input){
-
-    input.addEventListener(
-
-        "keydown",
-
-        function(e){
-
-            if(e.key==="Enter"){
-
-                sendMessage();
-
-            }
-
-        }
-
-    );
-
-}
-
-// ==========================
-// MARKDOWN ĐƠN GIẢN
-// ==========================
-
-function markdown(text){
-
-    text=text.replace(
-
-        /\*\*(.*?)\*\*/g,
-
-        "<b>$1</b>"
-
-    );
-
-    text=text.replace(
-
-        /\n/g,
-
-        "<br>"
-
-    );
-
-    return text;
-
-}
-// =========================================
-// JAVASCRIPT PART 6
-// AI CHAT - STREAM - MARKDOWN
-// =========================================
-
-// ==========================
-// THÊM TIN NHẮN
-// ==========================
-
-function addMessage(role,text){
-
-    if(currentChat<0) return;
-
-    chats[currentChat].messages.push({
-
-        role:role,
-
-        content:text
-
-    });
-
-    saveChats();
-
-    renderMessages();
-
-}
-
-// ==========================
-// GỌI AI
-// ==========================
-
-async function askAI(message){
-
-    showTyping();
-
-    try{
-
-        const response=await fetch("/api/chat",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                message:message,
-
-                profile:profile,
-
-                history:chats[currentChat].messages
-
-            })
-
-        });
-
-        hideTyping();
-
-        if(!response.ok){
-
-            throw new Error();
-
-        }
-
-        const data=await response.json();
-
-        addMessage(
-
-            "assistant",
-
-            data.reply
-
-        );
-
-    }
-
-    catch(e){
-
-        hideTyping();
-
-        addMessage(
-
-            "assistant",
-
-            "❌ Không thể kết nối AI."
-
-        );
-
-    }
-
-}
-
-// ==========================
-// GỬI TIN NHẮN
-// ==========================
-
-async function sendMessage(){
-
-    const input=document.getElementById("userInput");
-
-    if(!input) return;
-
-    const text=input.value.trim();
-
-    if(text==="") return;
-
-    input.value="";
-
-    addMessage(
-
-        "user",
-
-        text
-
-    );
-
-    await askAI(text);
-
-}
-
-// ==========================
-// ENTER
-// ==========================
-
-const input=document.getElementById("userInput");
-
-if(input){
-
-    input.addEventListener(
-
-        "keydown",
-
-        function(e){
-
-            if(e.key==="Enter"){
-
-                sendMessage();
-
-            }
-
-        }
-
-    );
-
-}
-
-// ==========================
-// MARKDOWN ĐƠN GIẢN
-// ==========================
-
-function markdown(text){
-
-    text=text.replace(
-
-        /\*\*(.*?)\*\*/g,
-
-        "<b>$1</b>"
-
-    );
-
-    text=text.replace(
-
-        /\n/g,
-
-        "<br>"
-
-    );
-
-    return text;
-
-}
-// =========================================
-// JAVASCRIPT PART 7
-// KHỞI TẠO WEBSITE
-// =========================================
-
-// ==========================
-// CHÀO NGƯỜI DÙNG
-// ==========================
-
-function welcomeUser(){
-
-    if(currentChat===-1) return;
-
-    if(chats[currentChat].messages.length>1){
+        toast("📭 Chưa có dữ liệu chat.");
 
         return;
 
     }
 
-    const hour=new Date().getHours();
+    let text = "";
 
-    let hello="Xin chào";
+    chatHistory.forEach(chat => {
 
-    if(hour<12){
+        text +=
+            "Bạn: " + chat.user + "\n";
 
-        hello="☀️ Chào buổi sáng";
+        text +=
+            "AI: " + chat.ai + "\n";
 
-    }else if(hour<18){
+        text +=
+            "-----------------------------\n";
 
-        hello="🌤️ Chào buổi chiều";
+    });
 
-    }else{
+    const blob = new Blob(
 
-        hello="🌙 Chào buổi tối";
+        [text],
 
-    }
+        {
 
-    chats[currentChat].messages[0].content=
+            type: "text/plain"
 
-    hello+
+        }
 
-    " "+profile.name+
+    );
 
-    "! 👋\n\nMình là PHT AI V100.0.\nMình có thể giúp gì cho bạn hôm nay?";
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download = "PHT_AI_Chat.txt";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
 
 }
 
-// ==========================
-// KHỞI ĐỘNG
-// ==========================
+//=============================
+// XÓA CHAT
+//=============================
 
-function startWebsite(){
+function clearCurrentChat() {
+
+    if (!confirm("Bạn có chắc muốn xóa cuộc trò chuyện?")) {
+
+        return;
+
+    }
+
+    chatHistory = [];
+
+    localStorage.removeItem("pht_chat");
+
+    document.getElementById("chatBox").innerHTML = "";
+
+    welcomeMessage();
+
+    toast("🗑 Đã xóa cuộc trò chuyện.");
+
+}
+
+//=============================
+// BACK TO TOP
+//=============================
+
+window.addEventListener("scroll", () => {
+
+    const btn = document.getElementById("backTop");
+
+    if (!btn) return;
+
+    if (window.scrollY > 300) {
+
+        btn.style.display = "flex";
+
+    } else {
+
+        btn.style.display = "none";
+
+    }
+
+});
+
+function scrollTopPage() {
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+//=============================
+// ẨN LOADING
+//=============================
+
+window.addEventListener("load", () => {
+
+    const loading = document.getElementById("loadingScreen");
+
+    if (!loading) return;
+
+    setTimeout(() => {
+
+        loading.style.display = "none";
+
+    }, 1000);
+
+});
+
+//=============================
+// KHỞI TẠO
+//=============================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    welcomeMessage();
 
     loadProfile();
 
-    if(chats.length===0){
+    loadChats();
 
-        newChat();
+    initTheme();
 
-    }
+    updateVisitor();
 
-    welcomeUser();
+    console.log("🚀 PHT AI V100.0 Ready!");
 
-    updateChatList();
-
-    renderMessages();
-
-}
-
-// ==========================
-// TỰ ĐỘNG LƯU
-// ==========================
-
-setInterval(()=>{
-
-    localStorage.setItem(
-
-        "profile",
-
-        JSON.stringify(profile)
-
-    );
-
-    localStorage.setItem(
-
-        "chats",
-
-        JSON.stringify(chats)
-
-    );
-
-},5000);
-
-// ==========================
-// DOM READY
-// ==========================
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    function(){
-
-        startWebsite();
-
-    }
-
-);
-
-// =========================================
-// PHT AI V100.0
-// Frontend Finished
-// =========================================
-
-console.log(
-
-"%cPHT AI V100.0 Loaded",
-
-"color:#00ff88;font-size:20px;font-weight:bold;"
-
-);
+});
