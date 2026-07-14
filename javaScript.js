@@ -19,7 +19,7 @@ let profile = {
 };
 
 //=============================
-// LOAD WEBSITE
+// KHI WEBSITE TẢI
 //=============================
 
 window.onload = function () {
@@ -36,6 +36,19 @@ window.onload = function () {
 
     welcomeMessage();
 
+    // Tắt màn hình loading
+    setTimeout(function () {
+
+        const loading = document.getElementById("loadingScreen");
+
+        if (loading) {
+
+            loading.style.display = "none";
+
+        }
+
+    }, 800);
+
 };
 
 //=============================
@@ -46,40 +59,44 @@ function showPage(id) {
 
     const pages = document.querySelectorAll(".page");
 
-    pages.forEach(function (page) {
+    pages.forEach(function(page){
+
         page.classList.remove("active");
+
     });
 
-    const current = document.getElementById(id);
+    const page = document.getElementById(id);
 
-    if (current) {
-        current.classList.add("active");
+    if(page){
+
+        page.classList.add("active");
+
         currentPage = id;
+
     }
 
 }
 
 //=============================
-// DARK MODE
+// GIAO DIỆN
 //=============================
 
-function toggleTheme() {
+function toggleTheme(){
 
     document.body.classList.toggle("dark");
 
-    const theme = document.body.classList.contains("dark")
-        ? "dark"
-        : "light";
-
-    localStorage.setItem("theme", theme);
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+    );
 
 }
 
-function initTheme() {
+function initTheme(){
 
     const theme = localStorage.getItem("theme");
 
-    if (theme === "dark") {
+    if(theme === "dark"){
 
         document.body.classList.add("dark");
 
@@ -91,49 +108,21 @@ function initTheme() {
 // THÔNG BÁO
 //=============================
 
-function toast(text) {
+function toast(text){
 
     const toastBox = document.getElementById("toast");
 
-    if (!toastBox) return;
+    if(!toastBox) return;
 
     toastBox.innerHTML = text;
 
     toastBox.classList.add("show");
 
-    setTimeout(function () {
+    setTimeout(function(){
 
         toastBox.classList.remove("show");
 
-    }, 2500);
-
-}
-
-//=============================
-// POPUP
-//=============================
-
-function showPopup(text) {
-
-    const popup = document.getElementById("popup");
-
-    const popupText = document.getElementById("popupText");
-
-    if (!popup || !popupText) return;
-
-    popupText.innerHTML = text;
-
-    popup.style.display = "flex";
-
-}
-
-function closePopup() {
-
-    const popup = document.getElementById("popup");
-
-    if (!popup) return;
-
-    popup.style.display = "none";
+    },2500);
 
 }
 //=============================
@@ -155,6 +144,7 @@ function welcomeMessage() {
             Hãy nhập câu hỏi để bắt đầu.
         </div>
     `;
+
 }
 
 async function sendMessage() {
@@ -168,7 +158,6 @@ async function sendMessage() {
 
     if (message === "") return;
 
-    // Hiển thị tin nhắn người dùng
     chatBox.innerHTML += `
         <div class="user-message">
             ${message}
@@ -179,7 +168,6 @@ async function sendMessage() {
 
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // Hiển thị AI đang trả lời
     chatBox.innerHTML += `
         <div class="bot-message" id="typing">
             🤖 Đang trả lời...
@@ -207,7 +195,9 @@ async function sendMessage() {
 
         const data = await response.json();
 
-        document.getElementById("typing").remove();
+        const typing = document.getElementById("typing");
+
+        if (typing) typing.remove();
 
         chatBox.innerHTML += `
             <div class="bot-message">
@@ -242,7 +232,6 @@ async function sendMessage() {
 
 }
 
-// Enter để gửi
 document.addEventListener("keydown", function (e) {
 
     const input = document.getElementById("userInput");
@@ -260,7 +249,7 @@ document.addEventListener("keydown", function (e) {
 });
 
 //=============================
-// CHAT
+// CHAT HISTORY
 //=============================
 
 function newChat() {
@@ -339,7 +328,6 @@ function exportChat() {
     chatHistory.forEach(function (item) {
 
         text += "Bạn: " + item.user + "\n";
-
         text += "AI: " + item.ai + "\n\n";
 
     });
@@ -365,13 +353,20 @@ function exportChat() {
 
 function saveProfile() {
 
-    profile.name = document.getElementById("profileName").value;
-    profile.email = document.getElementById("profileEmail").value;
-    profile.bio = document.getElementById("profileBio").value;
+    const name = document.getElementById("profileName");
+    const email = document.getElementById("profileEmail");
+    const bio = document.getElementById("profileBio");
 
-    localStorage.setItem("pht_profile", JSON.stringify(profile));
+    profile.name = name ? name.value : "";
+    profile.email = email ? email.value : "";
+    profile.bio = bio ? bio.value : "";
 
-    toast("Đã lưu hồ sơ.");
+    localStorage.setItem(
+        "pht_profile",
+        JSON.stringify(profile)
+    );
+
+    toast("💾 Đã lưu hồ sơ.");
 
 }
 
@@ -383,19 +378,32 @@ function loadProfile() {
 
     profile = JSON.parse(data);
 
-    document.getElementById("profileName").value = profile.name || "";
-    document.getElementById("profileEmail").value = profile.email || "";
-    document.getElementById("profileBio").value = profile.bio || "";
+    const name = document.getElementById("profileName");
+    const email = document.getElementById("profileEmail");
+    const bio = document.getElementById("profileBio");
+    const avatar = document.getElementById("avatarPreview");
 
-    if (profile.avatar) {
-        document.getElementById("avatarPreview").src = profile.avatar;
+    if (name) name.value = profile.name || "";
+    if (email) email.value = profile.email || "";
+    if (bio) bio.value = profile.bio || "";
+
+    if (avatar && profile.avatar) {
+
+        avatar.src = profile.avatar;
+
     }
 
 }
 
-const avatarInput = document.getElementById("avatarInput");
+//=============================
+// AVATAR
+//=============================
 
-if (avatarInput) {
+function initAvatar() {
+
+    const avatarInput = document.getElementById("avatarInput");
+
+    if (!avatarInput) return;
 
     avatarInput.addEventListener("change", function () {
 
@@ -407,7 +415,13 @@ if (avatarInput) {
 
         reader.onload = function (e) {
 
-            document.getElementById("avatarPreview").src = e.target.result;
+            const avatar = document.getElementById("avatarPreview");
+
+            if (avatar) {
+
+                avatar.src = e.target.result;
+
+            }
 
             profile.avatar = e.target.result;
 
@@ -415,6 +429,8 @@ if (avatarInput) {
                 "pht_profile",
                 JSON.stringify(profile)
             );
+
+            toast("✅ Đã cập nhật avatar.");
 
         };
 
@@ -424,17 +440,19 @@ if (avatarInput) {
 
 }
 
+document.addEventListener("DOMContentLoaded", initAvatar);
+
 //=============================
 // BACK TO TOP
 //=============================
 
-window.onscroll = function () {
+window.addEventListener("scroll", function () {
 
     const btn = document.getElementById("backTop");
 
     if (!btn) return;
 
-    if (document.documentElement.scrollTop > 300) {
+    if (window.scrollY > 300) {
 
         btn.style.display = "flex";
 
@@ -444,7 +462,7 @@ window.onscroll = function () {
 
     }
 
-};
+});
 
 function scrollTopPage() {
 
@@ -459,143 +477,157 @@ function scrollTopPage() {
 }
 
 //=============================
-// VISITOR
+// LƯỢT TRUY CẬP
 //=============================
 
 function updateVisitor() {
 
-    let count = Number(localStorage.getItem("visitor")) || 0;
+    let visitor = Number(localStorage.getItem("visitor")) || 0;
 
-    count++;
+    visitor++;
 
-    localStorage.setItem("visitor", count);
+    localStorage.setItem("visitor", visitor);
 
-    const el = document.getElementById("visitorCount");
+    const count = document.getElementById("visitorCount");
 
-    if (el) {
+    if (count) {
 
-        el.innerHTML = count;
+        count.innerHTML = visitor;
 
     }
 
 }
 //=============================
-// PROFILE
+// LOADING SCREEN
 //=============================
 
-function saveProfile() {
+window.addEventListener("load", function () {
 
-    profile.name = document.getElementById("profileName").value;
-    profile.email = document.getElementById("profileEmail").value;
-    profile.bio = document.getElementById("profileBio").value;
+    const loading = document.getElementById("loadingScreen");
 
-    localStorage.setItem("pht_profile", JSON.stringify(profile));
+    if (!loading) return;
 
-    toast("Đã lưu hồ sơ.");
+    setTimeout(function () {
+
+        loading.style.opacity = "0";
+
+        setTimeout(function () {
+
+            loading.style.display = "none";
+
+        }, 500);
+
+    }, 800);
+
+});
+
+//=============================
+// POPUP
+//=============================
+
+function showPopup(text) {
+
+    const popup = document.getElementById("popup");
+    const popupText = document.getElementById("popupText");
+
+    if (!popup || !popupText) return;
+
+    popupText.innerHTML = text;
+
+    popup.style.display = "flex";
 
 }
 
-function loadProfile() {
+function closePopup() {
 
-    const data = localStorage.getItem("pht_profile");
+    const popup = document.getElementById("popup");
 
-    if (!data) return;
+    if (!popup) return;
 
-    profile = JSON.parse(data);
-
-    document.getElementById("profileName").value = profile.name || "";
-    document.getElementById("profileEmail").value = profile.email || "";
-    document.getElementById("profileBio").value = profile.bio || "";
-
-    if (profile.avatar) {
-        document.getElementById("avatarPreview").src = profile.avatar;
-    }
+    popup.style.display = "none";
 
 }
 
-const avatarInput = document.getElementById("avatarInput");
+//=============================
+// TÌM KIẾM
+//=============================
 
-if (avatarInput) {
+function searchCards(keyword) {
 
-    avatarInput.addEventListener("change", function () {
+    keyword = keyword.toLowerCase();
 
-        const file = this.files[0];
+    const cards = document.querySelectorAll(
+        ".card,.tool-card,.casio-card"
+    );
 
-        if (!file) return;
+    cards.forEach(function (card) {
 
-        const reader = new FileReader();
+        const text = card.innerText.toLowerCase();
 
-        reader.onload = function (e) {
+        if (text.includes(keyword)) {
 
-            document.getElementById("avatarPreview").src = e.target.result;
+            card.style.display = "";
 
-            profile.avatar = e.target.result;
+        } else {
 
-            localStorage.setItem(
-                "pht_profile",
-                JSON.stringify(profile)
-            );
+            card.style.display = "none";
 
-        };
-
-        reader.readAsDataURL(file);
+        }
 
     });
 
 }
 
 //=============================
-// BACK TO TOP
+// KIỂM TRA SERVER
 //=============================
 
-window.onscroll = function () {
+async function checkServer() {
 
-    const btn = document.getElementById("backTop");
+    try {
 
-    if (!btn) return;
+        const response = await fetch("/");
 
-    if (document.documentElement.scrollTop > 300) {
+        if (response.ok) {
 
-        btn.style.display = "flex";
+            console.log("✅ Server Online");
 
-    } else {
+        } else {
 
-        btn.style.display = "none";
+            console.log("⚠ Server phản hồi lỗi");
 
-    }
+        }
 
-};
+    } catch (error) {
 
-function scrollTopPage() {
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
-}
-
-//=============================
-// VISITOR
-//=============================
-
-function updateVisitor() {
-
-    let count = Number(localStorage.getItem("visitor")) || 0;
-
-    count++;
-
-    localStorage.setItem("visitor", count);
-
-    const el = document.getElementById("visitorCount");
-
-    if (el) {
-
-        el.innerHTML = count;
+        console.log("❌ Không kết nối được Server");
 
     }
 
 }
+
+checkServer();
+
+//=============================
+// PHÍM ESC ĐÓNG POPUP
+//=============================
+
+document.addEventListener("keydown", function (e) {
+
+    if (e.key === "Escape") {
+
+        closePopup();
+
+    }
+
+});
+
+//=============================
+// THÔNG TIN
+//=============================
+
+console.log("==================================");
+console.log("🤖 PHT AI V100.0");
+console.log("Developed by Hoàng Tấn Phát");
+console.log("Website Loaded Successfully");
+console.log("==================================");
