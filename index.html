@@ -1,49 +1,157 @@
-<link rel="stylesheet" href="style.css">
+<!DOCTYPE html>
+<html lang="vi">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<head>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<!-- HOME -->
+    <title>PHT AI V100.0</title>
 
-<h1>💚 Chào mừng đến với PHT AI V100.0</h1>
+    <link rel="stylesheet" href="style.css">
 
-<p>
-Nền tảng AI học tập thông minh được phát triển bởi
-<b>Hoàng Tấn Phát</b>.
-</p>
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div id="loadingScreen">
+
+    <div class="loader"></div>
+
+    <h2>Đang tải PHT AI...</h2>
+
+</div>
+
+<header>
+
+<div class="logo">
+
+<i class="fa-solid fa-robot"></i>
+
+<h2>PHT AI V100.0</h2>
+
+</div>
+
+<nav>
+
+<button onclick="showPage('home')">
+
+🏠 Trang Chủ
+
+</button>
 
 <button onclick="showPage('chat')">
-🚀 Bắt đầu trò chuyện
+
+🤖 Chat AI
+
+</button>
+
+<button onclick="showPage('profile')">
+
+👤 Hồ sơ
+
 </button>
 
 <button onclick="showPage('tool')">
-📚 Khám phá Học Tool
+
+📚 Học Tool
+
 </button>
 
-<!-- FEATURE -->
+<button onclick="showPage('casio')">
 
-<div class="card">
-<h3>🤖 AI Chat</h3>
+🧮 Casio
+
+</button>
+
+<button onclick="showPage('about')">
+
+ℹ️ Về Chúng Tôi
+
+</button>
+
+</nav>
+
+</header>
+
+<main>
+
+<section
+id="home"
+class="page active">
+
+<h1>
+
+💚 Chào mừng đến với PHT AI V100.0
+
+</h1>
 
 <p>
+
+Nền tảng AI học tập thông minh được phát triển bởi
+<b>Hoàng Tấn Phát.</b>
+
+</p>
+
+<div class="hero-btn">
+
+<button onclick="showPage('chat')">
+
+🚀 Bắt đầu trò chuyện
+
+</button>
+
+<button onclick="showPage('tool')">
+
+📚 Khám phá Học Tool
+
+</button>
+
+</div>
+
+<div class="feature-grid">
+
+<div class="card">
+
+<i class="fa-solid fa-comments"></i>
+
+<h3>AI Chat</h3>
+
+<p>
+
 Chat AI hỗ trợ học tập,
 giải bài,
 viết code,
 dịch thuật
 và nhiều hơn nữa.
+
 </p>
 
 </div>
 
 <div class="card">
-<h3>📚 Học Tool</h3>
+
+<i class="fa-solid fa-book"></i>
+
+<h3>Học Tool</h3>
 
 <p>
+
 Tổng hợp công cụ học tập,
 Website,
 AI,
@@ -51,299 +159,377 @@ PDF,
 Office,
 Lập trình,
 Thi HSG.
+
 </p>
 
 </div>
 
 <div class="card">
-<h3>🧮 Casio</h3>
+
+<i class="fa-solid fa-calculator"></i>
+
+<h3>Casio</h3>
 
 <p>
+
 Kho tài liệu Casio,
 công thức,
 mẹo bấm máy,
 file hướng dẫn.
+
 </p>
 
 </div>
 
 <div class="card">
-<h3>👤 Hồ sơ</h3>
+
+<i class="fa-solid fa-user"></i>
+
+<h3>Hồ sơ</h3>
 
 <p>
+
 Đổi tên,
 đổi avatar,
 quản lý thông tin cá nhân.
+
 </p>
 
 </div>
 
-<!-- CHAT -->
-
-<h2>🟢 Đang hoạt động</h2>
-
-<button onclick="newChat()">🆕 New Chat</button>
-
-<button onclick="clearCurrentChat()">🗑 Xóa Chat</button>
-
-<button onclick="exportChat()">📄 Xuất Chat</button>
-
-<div id="chatBox">
-
-<p>
-👋 Xin chào!
-
-<br><br>
-
-Mình là <b>PHT AI V100.0</b>.
-
-<br><br>
-
-Hãy nhập câu hỏi để bắt đầu.
-</p>
-
 </div>
 
-<!-- PROFILE -->
+</section>
+<!-- ===========================
+CHAT AI
+=========================== -->
 
-<h2>👤 Hồ sơ</h2>
+<section id="chat" class="page">
 
-<img
-id="avatarPreview"
-src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-alt="Avatar">
+    <div class="chat-layout">
 
-<input
-type="file"
-id="avatarInput"
-accept="image/*">
+        <div class="chat-sidebar">
 
-<label>Họ và tên</label>
+            <h2>🤖 PHT AI</h2>
 
-<input
-id="profileName"
-type="text"
-placeholder="Nhập họ tên">
+            <p>🟢 Đang hoạt động</p>
 
-<label>Email</label>
+            <button onclick="newChat()">
+                🆕 New Chat
+            </button>
 
-<input
-id="profileEmail"
-type="email"
-placeholder="Email">
+            <button onclick="clearCurrentChat()">
+                🗑 Xóa Chat
+            </button>
 
-<label>Giới thiệu</label>
+            <button onclick="exportChat()">
+                📄 Xuất Chat
+            </button>
 
-<textarea
-id="profileBio"
-placeholder="Giới thiệu bản thân"></textarea>
+        </div>
 
-<button onclick="saveProfile()">
-💾 Lưu hồ sơ
-</button>
+        <div class="chat-main">
 
-<!-- TOOL -->
+            <div id="chatBox" class="chat-box">
 
-<h2>📚 Học Tool</h2>
+                <div class="bot-message">
 
-<div class="tool-card">
+                    👋 Xin chào!<br><br>
 
-<h3>🌐 Website học tập</h3>
+                    Mình là <b>PHT AI V100.0</b>.<br><br>
 
-<p>
-Tổng hợp website học
-Toán,
-Tiếng Anh,
-Lập trình,
-AI.
-</p>
+                    Hãy nhập câu hỏi để bắt đầu.
 
-<button>
-Xem thêm
-</button>
+                </div>
 
-</div>
+            </div>
 
-<div class="tool-card">
+            <div class="chat-input">
 
-<h3>📂 Thư viện</h3>
+                <input
+                    id="userInput"
+                    type="text"
+                    placeholder="Nhập câu hỏi...">
 
-<p>
-Kho tài liệu học tập,
-HSG,
-Casio,
-Tin học,
-Tiếng Anh.
-</p>
+                <button onclick="sendMessage()">
 
-<button>
-Mở thư viện
-</button>
+                    <i class="fa-solid fa-paper-plane"></i>
 
-</div>
+                </button>
 
-<div class="tool-card">
+            </div>
 
-<h3>💻 Lập trình</h3>
+        </div>
 
-<p>
-HTML,
-CSS,
-JavaScript,
-Python,
-GitHub.
-</p>
+    </div>
 
-<button>
-Học ngay
-</button>
+</section>
 
-</div>
+<!-- ===========================
+HỒ SƠ
+=========================== -->
 
-<div class="tool-card">
+<section id="profile" class="page">
 
-<h3>🤖 AI</h3>
+    <div class="profile-card">
 
-<p>
-ChatGPT,
-Gemini,
-Claude,
-Copilot
-và nhiều AI khác.
-</p>
+        <h2>👤 Hồ sơ</h2>
 
-<button>
-Khám phá
-</button>
+        <div class="avatar-area">
 
-</div>
+            <img
+                id="avatarPreview"
+                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                alt="Avatar">
 
-<!-- CASIO -->
+            <input
+                type="file"
+                id="avatarInput"
+                accept="image/*">
 
-<h2>🧮 Casio fx-580VN X</h2>
+        </div>
 
-<p>
-Chia sẻ tài liệu,
-mẹo bấm máy,
-file hướng dẫn
-và công thức Casio.
-</p>
+        <label>Họ và tên</label>
 
-<div class="casio-card">
+        <input
+            id="profileName"
+            type="text"
+            placeholder="Nhập họ tên">
 
-<h3>📁 File Casio</h3>
+        <label>Email</label>
 
-<p>
-Kho file Casio sẽ được cập nhật thường xuyên.
-</p>
+        <input
+            id="profileEmail"
+            type="email"
+            placeholder="Nhập email">
 
-<button>
-Mở File
-</button>
+        <label>Giới thiệu</label>
 
-</div>
+        <textarea
+            id="profileBio"
+            placeholder="Giới thiệu về bản thân"></textarea>
 
-<div class="casio-card">
+        <button onclick="saveProfile()">
 
-<h3>📘 Công thức</h3>
+            💾 Lưu hồ sơ
 
-<p>
-Tổng hợp công thức
-Toán THCS,
-THPT.
-</p>
+        </button>
 
-<button>
-Xem công thức
-</button>
+    </div>
 
-</div>
+</section>
+<!-- ===========================
+HỌC TOOL
+=========================== -->
 
-<!-- Đã xóa mục Video -->
+<section id="tool" class="page">
 
-<!-- ABOUT -->
+    <h2>📚 Học Tool</h2>
 
-<h2>ℹ️ Về Chúng Tôi</h2>
+    <p class="section-desc">
+        Tổng hợp các công cụ học tập miễn phí dành cho học sinh THCS và THPT.
+    </p>
 
-<p>
-PHT AI V100.0
-được phát triển bởi
-<b>Hoàng Tấn Phát</b>.
-</p>
+    <div class="tool-grid">
 
-<a href="#">Facebook</a><br>
+        <div class="tool-card">
 
-<a href="#">TikTok</a><br>
+            <i class="fa-solid fa-globe"></i>
 
-<a href="#">GitHub</a><br>
+            <h3>Website học tập</h3>
 
-<a href="mailto:tanphathoang885@gmail.com">
-tanphathoang885@gmail.com
-</a>
+            <p>
+                Tổng hợp website học Toán,
+                Tiếng Anh,
+                Lập trình,
+                AI.
+            </p>
 
-<h2 id="visitorCount">0</h2>
+            <!-- Thay link này bằng website bạn muốn -->
+            <button onclick="window.open('https://www.khanacademy.org','_blank')">
+                Xem thêm
+            </button>
 
-<!-- FOOTER -->
+        </div>
 
-<footer>
+        <div class="tool-card">
 
-<h2>🤖 PHT AI V100.0</h2>
+            <i class="fa-solid fa-folder-open"></i>
 
-<p>
-Website học tập và AI
-được phát triển bởi
-Hoàng Tấn Phát.
-</p>
+            <h3>Thư viện</h3>
 
-<a href="#">Facebook</a>
+            <p>
+                Kho tài liệu học tập,
+                HSG,
+                Casio,
+                Tin học,
+                Tiếng Anh.
+            </p>
 
-<a href="#">TikTok</a>
+            <!-- Thay link GitHub của bạn -->
+            <button onclick="window.open('https://github.com/tnpht214/PHT-AI','_blank')">
+                Mở thư viện
+            </button>
 
-<a href="#">GitHub</a>
+        </div>
 
-<a href="mailto:tanphathoang885@gmail.com">
-Email
-</a>
+        <div class="tool-card">
 
-<p>
-© 2026 PHT AI Platform V100.0
-</p>
+            <i class="fa-solid fa-code"></i>
 
-</footer>
+            <h3>Lập trình</h3>
 
-<!-- LOADING -->
+            <p>
+                HTML,
+                CSS,
+                JavaScript,
+                Python,
+                GitHub.
+            </p>
 
-<div id="loadingScreen">
+            <button onclick="window.open('https://developer.mozilla.org/','_blank')">
+                Học ngay
+            </button>
 
-<h2>Đang tải PHT AI...</h2>
+        </div>
 
-</div>
+        <div class="tool-card">
 
-<!-- BACK TO TOP -->
+            <i class="fa-solid fa-robot"></i>
+
+            <h3>AI</h3>
+
+            <p>
+                ChatGPT,
+                Gemini,
+                Claude,
+                Copilot
+                và nhiều AI khác.
+            </p>
+
+            <button onclick="window.open('https://chatgpt.com','_blank')">
+                Khám phá
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===========================
+CASIO
+=========================== -->
+
+<section id="casio" class="page">
+
+    <h2>🧮 Casio fx-580VN X</h2>
+
+    <p class="section-desc">
+        Chia sẻ tài liệu, mẹo bấm máy, file hướng dẫn và công thức Casio.
+    </p>
+
+    <div class="casio-grid">
+
+        <div class="casio-card">
+
+            <h3>📁 File Casio</h3>
+
+            <p>
+                Kho file Casio sẽ được cập nhật thường xuyên.
+            </p>
+
+            <!-- Thay bằng link thư mục Casio trên GitHub -->
+            <button onclick="window.open('https://github.com/tnpht214/PHT-AI/tree/main/Casio','_blank')">
+                Mở File
+            </button>
+
+        </div>
+
+        <div class="casio-card">
+
+            <h3>📘 Công thức</h3>
+
+            <p>
+                Tổng hợp công thức
+                Toán THCS,
+                THPT.
+            </p>
+
+            <!-- Thay bằng link thư mục Công thức -->
+            <button onclick="window.open('https://github.com/tnpht214/PHT-AI/tree/main/CongThuc','_blank')">
+                Xem công thức
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ===========================
+VỀ CHÚNG TÔI
+=========================== -->
+
+<section id="about" class="page">
+
+    <div class="about-box">
+
+        <h2>ℹ️ Về Chúng Tôi</h2>
+
+        <p>
+
+            <b>PHT AI V100.0</b><br><br>
+
+            Website học tập và AI được phát triển bởi
+            <b>Hoàng Tấn Phát</b>.
+
+        </p>
+
+        <div class="about-links">
+
+            <a href="https://www.facebook.com/profile.php?id=61582777690998" target="_blank">
+                <i class="fa-brands fa-facebook"></i>
+                Facebook
+            </a>
+
+            <a href="https://www.tiktok.com/@pht_dev" target="_blank">
+                <i class="fa-brands fa-tiktok"></i>
+                TikTok
+            </a>
+
+            <a href="https://github.com/tnpht214" target="_blank">
+                <i class="fa-brands fa-github"></i>
+                GitHub
+            </a>
+
+            <a href="mailto:tanphathoang885@gmail.com">
+                <i class="fa-solid fa-envelope"></i>
+                tanphathoang885@gmail.com
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+<!-- ===========================
+BACK TO TOP
+=========================== -->
 
 <button
 id="backTop"
 onclick="scrollTopPage()">
 
-⬆
+<i class="fa-solid fa-arrow-up"></i>
 
 </button>
 
-<!-- POPUP -->
-
-<div id="popup">
-
-<p id="popupText">
-Thông báo
-</p>
-
-<button onclick="closePopup()">
-Đóng
-</button>
-
-</div>
-
-<!-- TOAST -->
+<!-- ===========================
+THÔNG BÁO
+=========================== -->
 
 <div id="toast">
 
@@ -351,4 +537,76 @@ Thông báo
 
 </div>
 
+<!-- ===========================
+LOADING
+=========================== -->
+
+<div id="loading">
+
+<div class="loader"></div>
+
+<h2>Đang tải PHT AI...</h2>
+
+</div>
+
+<!-- ===========================
+FOOTER
+=========================== -->
+
+<footer>
+
+<div class="footer-content">
+
+<h2>🤖 PHT AI V100.0</h2>
+
+<p>
+
+Website học tập và AI
+được phát triển bởi
+Hoàng Tấn Phát.
+
+</p>
+
+<div class="footer-links">
+
+<a href="https://www.facebook.com/profile.php?id=61582777690998" target="_blank">
+
+Facebook
+
+</a>
+
+<a href="https://www.tiktok.com/@pht_dev" target="_blank">
+
+TikTok
+
+</a>
+
+<a href="https://github.com/tnpht214" target="_blank">
+
+GitHub
+
+</a>
+
+<a href="mailto:tanphathoang885@gmail.com">
+
+Email
+
+</a>
+
+</div>
+
+<p class="copyright">
+
+© 2026 PHT AI Platform V100.0
+
+</p>
+
+</div>
+
+</footer>
+
 <script src="script.js"></script>
+
+</body>
+
+</html>
